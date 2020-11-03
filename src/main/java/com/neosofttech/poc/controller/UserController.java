@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,17 +25,24 @@ import com.neosofttech.poc.exception.ResourceNotFoundException;
 import com.neosofttech.poc.model.ResponseModel;
 import com.neosofttech.poc.servise.UserService;
 
+/**
+ * @author pallavi
+ * @implNote insert, update, delete, show users data.
+ *
+ */
 @RestController
 public class UserController {
 
 	@Autowired
 	private UserService userService;
 
+	private static final Logger LOGGER = LogManager.getLogger(UserController.class);
+	
 	@PostMapping("/users")
 	public ResponseEntity<ResponseModel<User>> saveUser(@RequestBody User user) {
 		ArrayList<User> list = new ArrayList<User>();
 		HttpStatus status = null;
-		if(userService.existsByMobile(user))
+		if(!userService.existsByMobile(user))
 		{
 			if (list.add(userService.saveUser(user)))
 			status = HttpStatus.OK;
@@ -44,6 +53,7 @@ public class UserController {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("Save User", user.getFname() + " " + user.getLname());
 		ResponseModel<User> responce = new ResponseModel<User>(request, list, HttpStatus.OK);
+		LOGGER.info("User Created");
 		return new ResponseEntity<ResponseModel<User>>(responce, status);
 
 	}

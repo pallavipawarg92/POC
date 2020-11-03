@@ -1,15 +1,14 @@
 package com.neosofttech.poc.entity;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,27 +18,21 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class User {
-
+@AllArgsConstructor
+public class Address {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	private String address1;
+	private String address2;
+	private String City;
+	private int pincode;
 	
+	@ManyToOne
+	@JsonIgnore
+	private User user;
 	
-	private String fname;
-	private String mname;
-	private String lname;
-	private String mobile;
-	private String email;
-	
-	private Long salary;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="user_id")
-	private Set<Address> addesses;
-	
-	
-		
+
 }
