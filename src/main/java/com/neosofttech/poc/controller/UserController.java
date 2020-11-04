@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -36,7 +34,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	private static final Logger LOGGER = LogManager.getLogger(UserController.class);
 	
 	@PostMapping("/users")
 	public ResponseEntity<ResponseModel<User>> saveUser(@RequestBody User user) {
@@ -53,7 +50,6 @@ public class UserController {
 		Map<String, String> request = new HashMap<String, String>();
 		request.put("Save User", user.getFname() + " " + user.getLname());
 		ResponseModel<User> responce = new ResponseModel<User>(request, list, HttpStatus.OK);
-		LOGGER.info("User Created");
 		return new ResponseEntity<ResponseModel<User>>(responce, status);
 
 	}
@@ -72,7 +68,7 @@ public class UserController {
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<ResponseModel<User>> getUsers(
+	public ResponseEntity<ResponseModel<User>> getAllUsers(
 			@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "id") String sortedBy){
@@ -88,7 +84,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{id}")
-	public ResponseEntity<ResponseModel<User>> updateUser(@PathVariable	Integer id) {
+	public ResponseEntity<ResponseModel<User>> getUser(@PathVariable	Integer id) {
 		ArrayList<User> list = new ArrayList<User>();
 		Optional<User> user = userService.getUser(id);
 		if(!user.isPresent())
