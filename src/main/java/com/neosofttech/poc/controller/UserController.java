@@ -2,8 +2,11 @@ package com.neosofttech.poc.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +39,7 @@ public class UserController {
 
 	
 	@PostMapping("/users")
-	public ResponseEntity<ResponseModel<User>> saveUser(@RequestBody User user) {
+	public ResponseEntity<ResponseModel<User>> saveUser(@Valid @RequestBody User user) {
 		ArrayList<User> list = new ArrayList<User>();
 		HttpStatus status = null;
 		if(!userService.existsByMobile(user))
@@ -97,5 +100,32 @@ public class UserController {
 
 	}
 	
+	@GetMapping("/users-all")
+	public ResponseEntity<ResponseModel<User>> getAllUsersBySpecificName(){
+		
+		List<User> users = userService.getAllUsers();
+		Map<String,String> request = new HashMap<String, String>();
+		request.put("Get All Users", null);
+		
+		
+		//List of user whoes name start with P
+		/*
+		 * List<User> newList = users.stream(). filter(u ->
+		 * u.getFname().startsWith("P")) .collect(Collectors.toList());
+		 */
+		
+		// List of users by changing name from pallavi to pallu
+		
+		/*
+		 * List<User> newList = users.stream().map(u -> new User(u.getId(),
+		 * u.getFname().equals("Pallavi")? "Pallu" : u.getFname(),u.getMname(),
+		 * u.getLname(),u.getMobile(),u.getEmail(),u.getSalary(),u.getBirthdate(),u.
+		 * getAddesses())) .collect(Collectors.toList());
+		 */
+		
 	
+		ResponseModel<User> responce =  new ResponseModel<User>(request, users, HttpStatus.OK);
+		return new ResponseEntity<ResponseModel<User>>(responce,HttpStatus.OK);
+		
+	}
 }
